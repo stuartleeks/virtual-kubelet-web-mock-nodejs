@@ -79,5 +79,19 @@ app.post("/createPod", (req, res) => {
     res.send("OK");
 });
 
+app.post("/updatePod", (req, res) => {
+    var newPod = req.body;
+
+    for (let i = 0; i < pods.length; i++) {
+        const pod = pods[i];
+        if (pod.metadata.namespace === newPod.metadata.namespace && pod.metadata.name === newPod.metadata.name){
+            pods[i] = newPod;
+            res.send();
+            return;
+        }
+    }
+    res.statusCode = 404;
+    res.send();
+});
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
