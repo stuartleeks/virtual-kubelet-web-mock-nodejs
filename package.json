@@ -1,0 +1,15 @@
+{
+  "name": "virtual-kubelet-web-mock-nodejs",
+  "version": "1.0.0",
+  "description": "Virtual Kubelet Web provider API in nodejs",
+  "main": "index.js",
+  "scripts": {
+    "dev": "SET NODE_ENV=development && nodemon ./src/index.js",
+    "grunt": "grunt",
+    "start": "node ./src/index.js"
+  },
+  "author": "Stuart Leeks",
+  "dependencies": {
+    "express": "^4.16.3"
+  }
+}
