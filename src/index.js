@@ -94,4 +94,19 @@ app.post("/updatePod", (req, res) => {
     res.send();
 });
 
+app.delete("/deletePod", (req, res) => {
+    var podToDelete = req.body;
+
+    for (let i = 0; i < pods.length; i++) {
+        const pod = pods[i];
+        if (pod.metadata.namespace === podToDelete.metadata.namespace && pod.metadata.name === podToDelete.metadata.name){
+            pods.splice(i, 1);
+            res.send();
+            return;
+        }
+    }
+    res.statusCode = 404;
+    res.send();
+});
+
 app.listen(port, () => console.log(`Listening on port ${port}`));
