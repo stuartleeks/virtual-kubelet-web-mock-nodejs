@@ -8,7 +8,11 @@
             "type": "node",
             "request": "launch",
             "name": "Launch Program",
-            "program": "${workspaceFolder}\\src\\index.js"
+            "program": "${workspaceFolder}\\src\\index.js",
+            "env": {
+                "KUBELET_PORT" : "10250",
+                "VKUBELET_POD_IP" : "10.1.0.40" // TODO - set this to the IP for the Virtual Kubelet pod in the cluster
+            }
         }
     ]
 }

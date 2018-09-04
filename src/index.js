@@ -20,7 +20,17 @@ app.get("/capacity", (req, res) => res.send({
     "pods": "20"
 }));
 
-app.get("/nodeAddresses", (req, res) => res.send([]));
+app.get("/nodeAddresses", (req, res) => {
+    var addresses = [];
+    var kubeletPodIp = process.env.VKUBELET_POD_IP;
+    if (kubeletPodIp !== undefined) {
+        addresses.push({
+            type: "InternalIP",
+            address: kubeletPodIp
+        });
+    }
+    res.send(addresses)
+});
 
 app.get("/nodeConditions", (req, res) => res.send([
     {
@@ -40,7 +50,7 @@ app.get("/getPodStatus", (req, res) => {
     var name = req.query["name"];
     for (let i = 0; i < pods.length; i++) {
         const pod = pods[i];
-        if (pod.metadata.namespace === namespace && pod.metadata.name === name){
+        if (pod.metadata.namespace === namespace && pod.metadata.name === name) {
             res.send(pod.status);
             return;
         }
@@ -84,7 +94,7 @@ app.post("/updatePod", (req, res) => {
 
     for (let i = 0; i < pods.length; i++) {
         const pod = pods[i];
-        if (pod.metadata.namespace === newPod.metadata.namespace && pod.metadata.name === newPod.metadata.name){
+        if (pod.metadata.namespace === newPod.metadata.namespace && pod.metadata.name === newPod.metadata.name) {
             pods[i] = newPod;
             res.send();
             return;
@@ -99,7 +109,7 @@ app.delete("/deletePod", (req, res) => {
 
     for (let i = 0; i < pods.length; i++) {
         const pod = pods[i];
-        if (pod.metadata.namespace === podToDelete.metadata.namespace && pod.metadata.name === podToDelete.metadata.name){
+        if (pod.metadata.namespace === podToDelete.metadata.namespace && pod.metadata.name === podToDelete.metadata.name) {
             pods.splice(i, 1);
             res.send();
             return;
@@ -108,5 +118,25 @@ app.delete("/deletePod", (req, res) => {
     res.statusCode = 404;
     res.send();
 });
+
+app.get("/getContainerLogs", (req, res) => {
+    var namespace = req.query["namespace"];
+    var podName = req.query["podName"];
+    var containerName = req.query["containerName"];
+    for (let podIndex = 0; podIndex < pods.length; podIndex++) {
+        const pod = pods[podIndex];
+        if (pod.metadata.namespace === namespace && pod.metadata.name === podName) {
+            for (let containerIndex = 0; containerIndex < pod.spec.containers.length; containerIndex++) {
+                const container = pod.spec.containers[containerIndex];
+                if (container.name === containerName) {
+                    res.send(`Simulated log content for ${namespace}, ${podName}, ${containerName}\nIf this provider actually ran the containers then the logs would appear here ;-)\n`);
+                    return;
+                }
+            }
+        }
+    }
+    res.statusCode = 404;
+    res.send();
+})
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
