@@ -15,6 +15,8 @@ This API simply stores the a list of the pods that it has been requested to crea
 
 To run the API locally, run `npm start` (or `npm run dev` to set up nodemon to monitor file changes and automatically restart the site)
 
+To set the NodeAddress that the API returns, specify the `VKUBELET_POD_IP` environment variable.
+
 ## Connecting the API with Virtual Kubelet locally
 
 To connect Virtual Kubelet to the API, set the `WEB_ENDPOINT_URL` environment variable to `http://localhost:3000/` (or whatever you have exposed the API as)
